@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const PostSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -14,4 +14,5 @@ const PostSchema = new mongoose.Schema({
 
 PostSchema.index({ location: '2dsphere' });
 
-module.exports = mongoose.model('Post', PostSchema);
+const Post = mongoose.model('Post', PostSchema);
+export default Post;

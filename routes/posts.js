@@ -1,34 +1,24 @@
-const express = require('express');
+import express from 'express';
+import Post from '../models/Post.js';
+
 const router = express.Router();
-const Post = require('../models/Post');
 
-// Create Post
 router.post('/', async (req, res) => {
-    const { user, imageUrl, description, activityType, location } = req.body;
-    try {
-        let post = new Post({ user, imageUrl, description, activityType, location });
-        await post.save();
-        res.status(201).send('Post created');
-    } catch (err) {
-        res.status(500).send('Server error');
-    }
+  try {
+    const post = new Post({
+      user: req.body.user,
+      imageUrl: req.body.imageUrl,
+      description: req.body.description,
+      activityType: req.body.activityType,
+      location: req.body.location
+    });
+
+    await post.save();
+    res.status(201).send('Post created');
+  } catch (error) {
+    console.error('Error creating post:', error);
+    res.status(500).send(error.message);
+  }
 });
 
-// Get Posts by Location
-router.get('/', async (req, res) => {
-    const { lng, lat } = req.query;
-    try {
-        let posts = await Post.find({
-            location: {
-                $geoWithin: {
-                    $centerSphere: [[lng, lat], 10 / 3963.2] // 10 miles radius
-                }
-            }
-        });
-        res.status(200).json(posts);
-    } catch (err) {
-        res.status(500).send('Server error');
-    }
-});
-
-module.exports = router;
+export default router;

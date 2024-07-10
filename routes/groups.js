@@ -1,28 +1,23 @@
-const express = require('express');
+import express from 'express';
+import Group from '../models/Group.js';
+
 const router = express.Router();
-const Group = require('../models/Group');
 
-// Create Group
 router.post('/', async (req, res) => {
-    const { name, description, activityType, members } = req.body;
-    try {
-        let group = new Group({ name, description, activityType, members });
-        await group.save();
-        res.status(201).send('Group created');
-    } catch (err) {
-        res.status(500).send('Server error');
-    }
+  try {
+    const group = new Group({
+      name: req.body.name,
+      description: req.body.description,
+      activityType: req.body.activityType,
+      members: req.body.members
+    });
+
+    await group.save();
+    res.status(201).send('Group created');
+  } catch (error) {
+    console.error('Error creating group:', error);
+    res.status(500).send(error.message);
+  }
 });
 
-// Get Groups by Activity Type
-router.get('/', async (req, res) => {
-    const { activityType } = req.query;
-    try {
-        let groups = await Group.find({ activityType });
-        res.status(200).json(groups);
-    } catch (err) {
-        res.status(500).send('Server error');
-    }
-});
-
-module.exports = router;
+export default router;
