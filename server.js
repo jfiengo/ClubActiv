@@ -12,7 +12,7 @@ const io = socketIo(server);
 app.use(bodyParser.json());
 app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/activityApp', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://localhost:27017/ClubActiv')
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
