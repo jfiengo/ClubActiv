@@ -20,4 +20,22 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Fetch groups with optional filters: name, activityType, or description
+router.get('/', async (req, res) => {
+    const { name, activityType, description } = req.query;
+    
+    // Build the query object
+    const query = {};
+    if (name) query.name = name;
+    if (activityType) query.activityType = activityType;
+    if (description) query.description = description;
+  
+    try {
+      const groups = await Group.find(query);
+      res.status(200).json(groups);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  });
+  
 export default router;
