@@ -16,6 +16,11 @@ mongoose.connect('mongodb://localhost:27017/activityApp', { useNewUrlParser: tru
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
+// Define routes
+app.use('/api/users', require('./routes/users'));
+app.use('/api/posts', require('./routes/posts'));
+app.use('/api/groups', require('./routes/groups'));
+
 app.get('/', (req, res) => res.send('API Running'));
 
 io.on('connection', socket => {
