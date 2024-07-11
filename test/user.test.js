@@ -51,4 +51,11 @@ describe('Users', () => {
     expect(res.status).to.equal(409);
     expect(res.text).to.equal('Username already exists');
   });
+  
+  it('should fetch a user profile by username', async () => {
+    const res = await request(app).get(`/api/users/profile/${username}`);
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property('username');
+    expect(res.body).to.have.property('email');
+  });
 });
