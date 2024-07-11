@@ -60,4 +60,24 @@ router.put('/profile/:username', async (req, res) => {
     }
   });
 
+// User login
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    try {
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      const isMatch = await user.comparePassword(password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Invalid credentials' });
+      }
+  
+      res.json({ message: 'Login successful' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
 export default router;

@@ -5,6 +5,7 @@ import app from '../server.js';
 
 describe('Users', () => {
   let username;
+  const password = 'password123';
 
   before(async () => {
     // Connect to the test database
@@ -67,5 +68,32 @@ describe('Users', () => {
     
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property('email', newEmail);
+  });
+
+  it('should login a user with correct credentials', async () => {
+    const res = await request(app)
+      .post('/api/users/login')
+      .send({ username, password });
+
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property('message', 'Login successful');
+  });
+
+  it('should not login a user with incorrect credentials', async () => {
+    const res = await request(app)
+      .post('/api/users/login')
+      .send({ username, password: 'wrongpassword' });
+
+    expect(res.status).to.equal(400);
+    expect(res.body).to.have.property('message', 'Invalid credentials');
+  });
+
+  it('should not login a non-existent user', async () => {
+    const res = await request(app)
+      .post('/api/users/login')
+      .send({ username: 'nonexistentuser', password: 'password123' });
+
+    expect(res.status).to.equal(404);
+    expect(res.body).to.have.property('message', 'User not found');
   });
 });
