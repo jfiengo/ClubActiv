@@ -8,12 +8,9 @@ describe('Users', () => {
 
   before(async () => {
     // Connect to the test database
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_URI);
     username = `testuser-${Date.now()}`;
-  });
+});
 
   after(async () => {
     // Clean up the database

@@ -21,4 +21,32 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Fetch posts with location-based filtering
+router.get('/', async (req, res) => {
+    const { lat, lng, radius } = req.query;
+  
+    if (lat && lng && radius) {
+      const radiusInMiles = radius;
+      try {
+        const posts = await Post.find({
+          location: {
+            $geoWithin: {
+              $centerSphere: [[lng, lat], radiusInMiles / 3963.2]
+            }
+          }
+        });
+        res.status(200).json(posts);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    } else {
+      try {
+        const posts = await Post.find();
+        res.status(200).json(posts);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    }
+  });
+
 export default router;
