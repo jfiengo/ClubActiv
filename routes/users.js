@@ -43,4 +43,21 @@ router.get('/profile/:username', async (req, res) => {
     }
   });
 
+// Update user profile by username
+router.put('/profile/:username', async (req, res) => {
+    try {
+      const user = await User.findOneAndUpdate(
+        { username: req.params.username },
+        req.body,
+        { new: true, runValidators: true }
+      );
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
 export default router;
